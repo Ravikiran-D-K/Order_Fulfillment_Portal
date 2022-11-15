@@ -57,25 +57,44 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("/byname/{email}/{password}/{name}")
-	public ResponseEntity<List<FileData>> getByName(@PathVariable String password,@PathVariable String email,@PathVariable String name) {
+	public ResponseEntity<List<FileData>> getByName(@PathVariable String email,@PathVariable String password,@PathVariable String name) {
 		List<FileData> file = service.findByName(email,password,name);
 				if(file.isEmpty()) {
 					throw new ResourceNotFoundException("Data not exist with name :"+ name);
 				}
 		return ResponseEntity.ok(file);
 	}
+	
+	@GetMapping("/bynames/{email}/{password}/{name}")
+	public ResponseEntity<List<String>> getByNameS(@PathVariable String email,@PathVariable String password,@PathVariable String name) {
+		List<String> file = service.findByNameS(email,password,name);
+				if(file.isEmpty()) {
+					throw new ResourceNotFoundException("Data not exist with Employee :"+ email);
+				}
+		return ResponseEntity.ok(file);
+	}
 
 	@GetMapping("/byaccount/{email}/{password}/{account}")
-	public ResponseEntity<List<FileData>> getByAccount(@PathVariable String password,@PathVariable String email,@PathVariable String account) {
+	public ResponseEntity<List<FileData>> getByAccount(@PathVariable String email,@PathVariable String password,@PathVariable String account) {
 		List<FileData> file = service.findByAccount(email,password,account);
+		System.out.println(file);
 				if(file.isEmpty()) {
 					throw new ResourceNotFoundException("Data not exist with account :"+ account);
 				}
 		return ResponseEntity.ok(file);
 	}
 
+	@GetMapping("/byaccounts/{email}/{password}/{account}")
+	public ResponseEntity<List<String>> getByAccountS(@PathVariable String email,@PathVariable String password,@PathVariable String account) {
+		List<String> file = service.findByAccountS(email,password,account);
+				if(file.isEmpty()) {
+					throw new ResourceNotFoundException("Data not exist with Employee :"+ email);
+				}
+		return ResponseEntity.ok(file);
+	}
+	
 	@GetMapping("/bydate/{email}/{password}/{due_date}")
-	public ResponseEntity<List<FileData>> getByDate(@PathVariable String password,@PathVariable String email,@PathVariable String due_date) {
+	public ResponseEntity<List<FileData>> getByDate(@PathVariable String email,@PathVariable String password,@PathVariable String due_date) {
 		String s=due_date.substring(8, 10)+due_date.substring(4, 8)+due_date.substring(0, 4);
 		List<FileData> file =service.findByDate(email,password,s);
 				if(file.isEmpty()) {
@@ -84,9 +103,26 @@ public class EmployeeController {
 		return ResponseEntity.ok(file);
 	}
 	
+	@GetMapping("/bydates/{email}/{password}/{due_date}")
+	public ResponseEntity<List<String>> getByDateS(@PathVariable String email,@PathVariable String password,@PathVariable String due_date) {
+		List<String> file = service.findByDateS(email,password,due_date);
+				if(file.isEmpty()) {
+					throw new ResourceNotFoundException("Data not exist with Employee :"+ email);
+				}
+		return ResponseEntity.ok(file);
+	}
+	
 	@GetMapping("/byemp/{email}/{password}")
 	public ResponseEntity<List<FileData>> getByEmp(@PathVariable String email,@PathVariable String password) {
 		List<FileData> file = service.findByEmp(email,password);
+				if(file.isEmpty()) {
+					throw new ResourceNotFoundException("Data not exist with Employee :"+ email);
+				}
+		return ResponseEntity.ok(file);
+	}
+	@GetMapping("/byemps/{email}/{password}")
+	public ResponseEntity<List<String>> getByEmpS(@PathVariable String email,@PathVariable String password) {
+		List<String> file = service.findByEmpS(email,password);
 				if(file.isEmpty()) {
 					throw new ResourceNotFoundException("Data not exist with Employee :"+ email);
 				}

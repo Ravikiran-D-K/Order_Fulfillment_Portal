@@ -82,7 +82,7 @@ public class ServiceImplementation implements ServiceInterface{
 		boolean name = false;  
 		boolean quantity = false;  
 		//parser starts parsing a specific element inside the document    
-		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException   
+		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException,NumberFormatException   
 		{  
 			if(c==9)
 				c=3;
@@ -155,7 +155,7 @@ public class ServiceImplementation implements ServiceInterface{
 		}
 		}  
 		//parser ends parsing the specific element inside the document  
-		public void endElement(String uri, String localName, String qName) throws SAXException   
+		public void endElement(String uri, String localName, String qName) throws SAXException,NumberFormatException   
 		{  
 		System.out.println("End Element:" + qName);  
 		if(c==2 && !qName.equalsIgnoreCase("ACCOUNT"))
@@ -204,7 +204,7 @@ public class ServiceImplementation implements ServiceInterface{
 		}  
 		//reads the text value of the currently parsed element 
 
-		public void characters(char ch[], int start, int length) throws SAXException   
+		public void characters(char ch[], int start, int length) throws SAXException,NumberFormatException  
 		{  
 		if (account)   
 		{  
@@ -244,7 +244,7 @@ public class ServiceImplementation implements ServiceInterface{
 		}  
 		  
 		}
-		public void warning(String i) throws SAXException{
+		public void warning(String i) throws SAXException,NumberFormatException{
 			throw new SAXException("Error "+i);
 		}
 		};  
@@ -252,7 +252,8 @@ public class ServiceImplementation implements ServiceInterface{
 		}   
 		catch (Exception e)   
 		{  
-		e.printStackTrace();  
+		e.printStackTrace();
+		return false;
 		}
 
 		Mfile file2=filerepo.getFile(id);
@@ -276,11 +277,14 @@ public class ServiceImplementation implements ServiceInterface{
 			
 			i--;
 			}
+			c=0;
 			return true;
 		}
-		if(c==-1)
+		if(c==-1) {
+			c=0;
 			return false;
-		
+		}
+		c=0;
 		return false;  
 	}
 
@@ -289,51 +293,95 @@ public class ServiceImplementation implements ServiceInterface{
 		List<FileData> data= dao.findByName();
 		List<FileData> data1=new ArrayList<>();
 		int i=data.size(),a=0;
-		while(i!=0) {
-		if(data.get(a).getEmployee().getEmail().contentEquals(email) && data.get(a).getEmployee().getPassword().contentEquals(password)
-				&& data.get(a).getName().contentEquals(name)) {
-			data1.add(data.get(a));
-			a++;
+		if(email.contentEquals("Admin@gmail.com") && password.contentEquals("Admin")) {
+			while(i!=0) {
+				if(data.get(a).getName().contentEquals(name)) {
+					data1.add(data.get(a));
+					
+				}
+				a++;
+				i--;
+				}
+			return data1;
 		}
-		i--;
+		else {
+			while(i!=0) {
+				if(data.get(a).getEmployee().getEmail().contentEquals(email) && data.get(a).getEmployee().getPassword().contentEquals(password)
+						&& data.get(a).getName().contentEquals(name)) {
+					data1.add(data.get(a));
+					
+				}
+				a++;
+				i--;
+				}
+			return data1;
 		}
-		return data1;
 		
 	}
 
 	@Override
 	public List<FileData> findByAccount(String email,String password,String account) {
 		List<FileData> data= dao.findByAccount();
-		
+		//System.out.println(data.get(0).getEmployee().getEmail());
 		List<FileData> data1=new ArrayList<>();
 		int i=data.size(),a=0;
-		while(i!=0) {
-		if(data.get(a).getEmployee().getEmail().contentEquals(email) && data.get(a).getEmployee().getPassword().contentEquals(password)
-				&& data.get(a).getAccount().contentEquals(account)) {
-			data1.add(data.get(a));
-			a++;
+		if(email.contentEquals("Admin@gmail.com") && password.contentEquals("Admin")) {
+			//System.out.println("true");
+			while(i!=0) {
+				if(data.get(a).getAccount().contentEquals(account)) {
+					data1.add(data.get(a));
+				}
+				a++;
+				i--;
+				}
+			return data1;
 		}
-		i--;
+		else {
+			//System.out.println("true");
+			while(i!=0) {
+				if(data.get(a).getEmployee().getEmail().contentEquals(email) && data.get(a).getEmployee().getPassword().contentEquals(password)
+						&& data.get(a).getAccount().contentEquals(account)) {
+					data1.add(data.get(a));
+					System.out.println("true");
+				}
+				a++;
+				//System.out.println("true");
+				i--;
+				}
+			//System.out.println(data1.get(0));
+			return data1;
 		}
-		return data1;
 		}
 	
 
 	@Override
 	public List<FileData> findByDate(String email,String password,String due_date) {
 		List<FileData> data= dao.findByDate();
-		
 		List<FileData> data1=new ArrayList<>();
 		int i=data.size(),a=0;
-		while(i!=0) {
-		if(data.get(a).getEmployee().getEmail().contentEquals(email) && data.get(a).getEmployee().getPassword().contentEquals(password)
-				&& data.get(a).getDue_date().contentEquals(due_date)) {
-			data1.add(data.get(a));
-			a++;
+		if(email.contentEquals("Admin@gmail.com") && password.contentEquals("Admin")) {
+			while(i!=0) {
+				if(data.get(a).getDue_date().contentEquals(due_date)) {
+					data1.add(data.get(a));
+					
+				}
+				a++;
+				i--;
+				}
+			return data1;
 		}
-		i--;
+		else {
+			while(i!=0) {
+				if(data.get(a).getEmployee().getEmail().contentEquals(email) && data.get(a).getEmployee().getPassword().contentEquals(password)
+						&& data.get(a).getDue_date().contentEquals(due_date)) {
+					data1.add(data.get(a));
+					
+				}
+				a++;
+				i--;
+				}
+			return data1;
 		}
-		return data1;
 		}
 	
 
@@ -349,20 +397,87 @@ public class ServiceImplementation implements ServiceInterface{
 	@Override
 	public List<FileData> findByEmp(String email,String password) {
 		List<FileData> data= dao.findByEmp();
+		List<FileData> data1=new ArrayList<>();
+		int i=data.size(),a=0;
 		if(email.contentEquals("Admin@gmail.com") && password.contentEquals("Admin")) {
 			return data;
 		}
 		else {
-		List<FileData> data1=new ArrayList<>();
-		int i=data.size(),a=0;
 		while(i!=0) {
 		if(data.get(a).getEmployee().getEmail().contentEquals(email) && data.get(a).getEmployee().getPassword().contentEquals(password)) {
 			data1.add(data.get(a));
-			a++;
+			
 		}
+		a++;
 		i--;
 		}
 		return data1;
 		}
+	}
+
+	@Override
+	public List<String> findByEmpS(String email, String password) {
+		List<FileData> data= dao.findByEmp();
+		List<String> data1=new ArrayList<>();
+		int i=data.size(),a=0;
+		if(email.contentEquals("Admin@gmail.com") && password.contentEquals("Admin")) {
+			while(i!=0) {
+				data1.add(data.get(a).getEmployee().getEmail());	
+				a++;
+				i--;
+				}
+		}
+		return data1;
+	}
+
+	@Override
+	public List<String> findByNameS(String email, String password, String name) {
+		List<FileData> data= dao.findByEmp();
+		List<String> data1=new ArrayList<>();
+		int i=data.size(),a=0;
+		if(email.contentEquals("Admin@gmail.com") && password.contentEquals("Admin")) {
+			while(i!=0) {
+				if(data.get(a).getName().contentEquals(name)) {
+				data1.add(data.get(a).getEmployee().getEmail());
+				}
+				a++;
+				i--;
+				}
+		}
+		return data1;
+	}
+
+	@Override
+	public List<String> findByAccountS(String email, String password, String account) {
+		List<FileData> data= dao.findByEmp();
+		List<String> data1=new ArrayList<>();
+		int i=data.size(),a=0;
+		if(email.contentEquals("Admin@gmail.com") && password.contentEquals("Admin")) {
+			while(i!=0) {
+				if(data.get(a).getAccount().contentEquals(account)) {
+				data1.add(data.get(a).getEmployee().getEmail());
+				}
+				a++;
+				i--;
+				}
+		}
+		return data1;
+	}
+
+	@Override
+	public List<String> findByDateS(String email, String password, String due_date) {
+		List<FileData> data= dao.findByEmp();
+		List<String> data1=new ArrayList<>();
+		int i=data.size(),a=0;
+		if(email.contentEquals("Admin@gmail.com") && password.contentEquals("Admin")) {
+			while(i!=0) {
+				if(data.get(a).getDue_date().contentEquals(due_date)) {
+				data1.add(data.get(a).getEmployee().getEmail());
+				}
+				a++;
+				i--;
+				}
+		}
+		return data1;
 	}
 }

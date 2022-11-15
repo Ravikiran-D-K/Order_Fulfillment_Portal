@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.boomi.project.model.Employee;
 import com.boomi.project.model.FileData;
+import com.boomi.project.model.Order;
 
 public interface ServiceInterface {
 
@@ -25,5 +26,13 @@ public interface ServiceInterface {
 	public String insert(Employee emp);
 
 	public List<FileData> findByEmp(String email,String password);
+
+	public List<String> findByEmpS(String email, String password);
+
+	public List<String> findByNameS(String email, String password, String name);
+
+	public List<String> findByAccountS(String email, String password, String account);
+
+	public List<String> findByDateS(String email, String password, String due_date);
 
 }
