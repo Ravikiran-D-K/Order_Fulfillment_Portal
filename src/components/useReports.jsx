@@ -25,7 +25,7 @@ function useReports(props){
 
       function handleSubmit(event){
         event.preventDefault()
-        if(emp1!='rno')
+        if(emp1!=='rno')
         setEmp1("rno")
         else
         setEmp1("ryes")

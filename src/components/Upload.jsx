@@ -13,6 +13,7 @@ function Upload({email,password}) {
   const[file,setFile]=React.useState();
   const [errorMessage, setErrorMessage] = React.useState()
   const [col='form-control', setCol] = React.useState()
+  const [style,setStyle]=React.useState()
   const mystyle = {
     color: "black",
     backgroundColor: "lightgrey",
@@ -25,12 +26,20 @@ function Upload({email,password}) {
     padding: "5px",
     fontFamily: "Arial"
   };
+  const mystyle2 = {
+    color: "green",
+    backgroundColor: "white",
+    padding: "5px",
+    fontFamily: "Arial"
+  };
 
   function handleChange(event) {
     event.preventDefault()
     setFile(event.target.files[0])
     if(event.target.files[0].type!=='text/xml'){
         setErrorMessage("Invalid File!")
+        setStyle(mystyle1)
+        setFile(null)
         console.log(event.target.files[0].type);
         console.log(event.target.files[0].type!=='text/xml');
         event.target.value=null;
@@ -56,10 +65,15 @@ function Upload({email,password}) {
       } ).then((response) => {
       //history.push("/table");
       console.log(response.data)
-      if(response.data==='true')
-      setErrorMessage("Uploaded")
-      else
-      setErrorMessage("Not Uploaded")
+      if(response.data===true){
+      setErrorMessage("Uploaded and Read")
+      setStyle(mystyle2)
+      }
+      else{
+      setErrorMessage("Invalid XML Format")
+      setStyle(mystyle1)
+      }
+      // setFile(null);
     });
   }
 
@@ -70,7 +84,7 @@ function Upload({email,password}) {
     <div  className=" col-md-3 mb-3">
           <h4 style={mystyle}>XML File Upload</h4>
           <input type="file" className={col} onChange={handleChange}/>
-          {errorMessage && <div className="error" style={mystyle1}> {errorMessage} </div>}
+          {errorMessage && <div className="error" style={style}> {errorMessage} </div>}
     </div>
     <div className="col-sm-6" ><br></br>
     <br></br><button className="btn btn-primary mb-3" type="submit">Upload</button>

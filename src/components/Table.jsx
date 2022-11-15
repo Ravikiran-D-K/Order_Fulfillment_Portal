@@ -6,26 +6,47 @@ import useDashBoard from "./DashBoard";
 
 function Table({emp1,by1,some1,email,password}){
   const [orders, setOrders] = React.useState([])
+  const [string, setString] = React.useState([])
+//   const [i, setI] = React.useState(0)
+let i=0;
 const[x,setX]=React.useState()
   useEffect(()=>{
     if(emp1==='rno' || emp1==='ryes'){
         if(by1==='account'){
+            i=0;
         EmployeeService.getByAccount(email,password,some1).then((res) => {
             setOrders(res.data);
             console.log(by1);
         });
+        if(email==='Admin@gmail.com' && password==='Admin'){
+            EmployeeService.getByAccountS(email,password,some1).then((res) => {
+                setString(res.data);
+            });
+        }
         }
         else if(by1==='name'){
+            i=0;
             EmployeeService.getByName(email,password,some1).then((res) => {
                 setOrders(res.data);
                 console.log(by1);
             });
+            if(email==='Admin@gmail.com' && password==='Admin'){
+                EmployeeService.getByNameS(email,password,some1).then((res) => {
+                    setString(res.data);
+                });
+            }
         }
         else if(by1==='due_date'){
+            i=0;
             EmployeeService.getByDate(email,password,some1).then((res) => {
                 setOrders(res.data);
                 console.log(by1);
             });
+            if(email==='Admin@gmail.com' && password==='Admin'){
+                EmployeeService.getByDateS(email,password,some1).then((res) => {
+                    setString(res.data);
+                });
+            }
         }
     }
         console.log(some1)
@@ -37,6 +58,7 @@ const[x,setX]=React.useState()
     event.preventDefault()
     console.log("haiii")
     setOrders([])
+    i=0;
             EmployeeService.getByEmp(email,password).then((res) => {
                 setOrders(res.data);
                 if(x==='yes')
@@ -44,6 +66,11 @@ const[x,setX]=React.useState()
                 else
                 setX('yes')
             });
+            if(email==='Admin@gmail.com' && password==='Admin'){
+            EmployeeService.getByEmpS(email,password).then((res) => {
+                setString(res.data);
+            });
+        }
         }
 
         return(
@@ -62,10 +89,11 @@ const[x,setX]=React.useState()
                                     <th> Product Category</th>
                                     <th> Product Name</th>
                                     <th> Product Quantity</th>
+                                    <th> Email</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {
+                                {   
                                     orders.map(
                                         orders => 
                                         <tr key = {orders.by1}>
@@ -75,9 +103,10 @@ const[x,setX]=React.useState()
                                              <td> {orders.category}</td>
                                              <td> {orders.name}</td>
                                              <td> {orders.quantity}</td>
-                                             
+                                             <td> {string[i++]}</td>
                                         </tr>
                                     )
+                                
                                 }
                             </tbody>
                         </table>
